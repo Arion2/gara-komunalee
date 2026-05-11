@@ -1,0 +1,86 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL ─────────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: gara_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       garadb
+      POSTGRES_USER:     garauser
+      POSTGRES_PASSWORD: garapass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"          # remove this line if you don't need direct DB access
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U garauser -d garadb"]
+      interval: 5s
+      timeout:  5s
+      retries:  5
+
+  # ── FastAPI App ────────────────────────────────────────────────────────────
+  app:
+    build: .
+    container_name: gara_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://garauser:garapass@db:5432/garadb
+    volumes:
+      - ./app:/app
+      - ./public:/app/public
+    ports:
+      - "8000:8000"
+
+  # ── Nginx (reverse proxy + static files) ──────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: gara_nginx
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./public:/usr/share/nginx/html:ro
+
+volumes:
+  pgdata:
+
+
+# services:
+#   db:
+#     image: postgres:16-alpine
+#     container_name: gara_db
+#     restart: unless-stopped
+#     environment:
+#       POSTGRES_DB:       garadb
+#       POSTGRES_USER:     garauser
+#       POSTGRES_PASSWORD: garapass
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U garauser -d garadb"]
+#       interval: 5s
+#       timeout:  5s
+#       retries:  5
+
+#   app:
+#     build: .
+#     container_name: gara_app
+#     restart: unless-stopped
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#     environment:
+#       DATABASE_URL: postgresql://garauser:garapass@db:5432/garadb
+#     ports:
+#       - "80:8000"
+
+# volumes:
+#   pgdata:

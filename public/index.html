@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gara Komunale e Diturisë 2026 – Shtime</title>
+  <link rel="icon" id="favicon" type="image/png">
+  <script>
+    (function() {
+      var img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        canvas.width = 64; canvas.height = 64;
+        var ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(32, 32, 32, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(img, 0, 0, 64, 64);
+        document.getElementById('favicon').href = canvas.toDataURL('image/png');
+      };
+      img.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHa030diCRpYkecaxZJu6Tvwwd23MDiYpbvA&s';
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* ── PARTNER LOGOS ── */
+    .partner-logos {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .partner-logo {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      border-radius: 8px;
+      /* screen blend: white bg becomes invisible on dark surfaces, colors stay true */
+      mix-blend-mode: screen;
+      opacity: 0.95;
+      transition: opacity .2s, transform .2s;
+    }
+    .partner-logo:hover {
+      opacity: 1;
+      transform: scale(1.07);
+    }
+    /* Wrapper: lets nav-pills + logos sit side by side */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- LANDING PAGE -->
+<div id="page-landing" class="page active">
+  <div class="header">
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo">
+          <div class="logo-icon">🏆</div>
+          <div>
+            <div class="logo-text">Gara e Diturisë 2026</div>
+            <div class="logo-sub">Qendra e Inovacionit – Shtime</div>
+          </div>
+        </div>
+        <div class="partner-logos">
+          <img class="partner-logo"
+               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb753MVwGqV8h3ds5zhib8NpkmaQRzmvYCFw&s"
+               alt="Logo 1">
+          <img class="partner-logo"
+               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHa030diCRpYkecaxZJu6Tvwwd23MDiYpbvA&s"
+               alt="Logo 2">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container" style="flex:1">
+    <div class="landing-hero">
+      <h1>Gara Komunale<br>e Diturisë 2026</h1>
+      <p>Platforma elektronike për organizimin dhe zhvillimin e garës akademike komunale – Shtime</p>
+    </div>
+    <div class="landing-cards">
+      <div class="landing-card" onclick="showPage('page-student-login')">
+        <div class="lc-icon">🎓</div>
+        <div class="lc-title">Portal Nxënësi</div>
+        <div class="lc-desc">Hyr me kodin e testit dhe plotëso provimin. Rezultati shfaqet menjëherë pas dorëzimit.</div>
+        <div class="mt-2"><span class="badge badge-green">Hyr →</span></div>
+      </div>
+      <div class="landing-card" onclick="showPage('page-admin-login')">
+        <div class="lc-icon">⚙️</div>
+        <div class="lc-title">Panel Administratori</div>
+        <div class="lc-desc">Krijo dhe menaxho teste, shiko rezultatet dhe eksporto të dhënat.</div>
+        <div class="mt-2"><span class="badge badge-blue">Hyr →</span></div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num">245</div><div class="stat-label">Nxënës Pjesëmarrës</div></div>
+      <div class="stat-item"><div class="stat-num">9</div><div class="stat-label">Lëndë Mësimore</div></div>
+      <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">Shkolla</div></div>
+      <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">Ditë Gare</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT LOGIN -->
+<div id="page-student-login" class="page">
+  <div class="header">
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo">
+          <div class="logo-icon">🎓</div>
+          <div><div class="logo-text">Portal Nxënësi</div></div>
+        </div>
+        <div class="header-right">
+          <button class="nav-pill" onclick="showPage('page-landing')">← Kthehu</button>
+          <div class="partner-logos">
+            <img class="partner-logo"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb753MVwGqV8h3ds5zhib8NpkmaQRzmvYCFw&s"
+                 alt="Logo 1">
+            <img class="partner-logo"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHa030diCRpYkecaxZJu6Tvwwd23MDiYpbvA&s"
+                 alt="Logo 2">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container" style="flex:1; display:flex; align-items:center; justify-content:center; padding:40px 24px;">
+    <div style="width:100%; max-width:480px;">
+      <div class="card">
+        <div class="card-title">🎓 Regjistrohu për Garim</div>
+        <div class="card-sub">Plotëso të dhënat e tua dhe kodi i testit të dhënë nga administratori</div>
+        <div id="student-login-error"></div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Emri</label>
+            <input class="form-input" id="s-name" placeholder="Emri juaj" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mbiemri</label>
+            <input class="form-input" id="s-surname" placeholder="Mbiemri juaj" autocomplete="off">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Klasa</label>
+            <select class="form-select" id="s-grade">
+              <option value="">Zgjidh klasën</option>
+              <option value="VI">VI</option>
+              <option value="VII">VII</option>
+              <option value="VIII">VIII</option>
+              <option value="IX">IX</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Shkolla</label>
+            <select class="form-select" id="s-school">
+              <option value="">Zgjidh shkollën</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Kodi i Testit</label>
+          <input class="form-input mono" id="s-test-code" placeholder="P.sh. AB1234" autocomplete="off"
+            style="letter-spacing:4px;font-size:18px;text-transform:uppercase">
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="studentLogin()">🚀 Fillo Testin</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="page-quiz" class="page">
+  <div class="header">
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo">
+          <div class="logo-icon">📝</div>
+          <div>
+            <div class="logo-text" id="quiz-subject-header">Test</div>
+            <div class="logo-sub" id="quiz-student-header">Nxënës</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="flex flex-center gap-3">
+            <span class="badge badge-blue" id="quiz-progress-badge">0/0</span>
+            <button class="btn btn-success btn-sm" onclick="confirmSubmit()">✓ Dorëzo Testin</button>
+          </div>
+          <div class="partner-logos">
+            <img class="partner-logo"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb753MVwGqV8h3ds5zhib8NpkmaQRzmvYCFw&s"
+                 alt="Logo 1">
+            <img class="partner-logo"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHa030diCRpYkecaxZJu6Tvwwd23MDiYpbvA&s"
+                 alt="Logo 2">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container" style="flex:1; padding:24px;">
+    <div style="max-width:800px; margin:0 auto;">
+      <div id="timer-display">60:00</div>
+      <div class="progress-bar mb-2">
+        <div class="progress-fill" id="quiz-progress-fill" style="width:0%"></div>
+      </div>
+      <div class="question-nav" id="question-nav"></div>
+      <div id="question-container"></div>
+      <div class="flex-between mt-2">
+        <button class="btn btn-secondary" id="btn-prev" onclick="prevQuestion()">← Para</button>
+        <button class="btn btn-primary"   id="btn-next" onclick="nextQuestion()">Tjetër →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="page-result" class="page">
+  <div class="header">
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo">
+          <div class="logo-icon">🏆</div>
+          <div><div class="logo-text">Rezultati Juaj</div></div>
+        </div>
+        <div class="header-right">
+          <button class="nav-pill" onclick="showPage('page-landing')">↩ Faqja Kryesore</button>
+          <div class="partner-logos">
+            <img class="partner-logo"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb753MVwGqV8h3ds5zhib8NpkmaQRzmvYCFw&s"
+                 alt="Logo 1">
+            <img class="partner-logo"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHa030diCRpYkecaxZJu6Tvwwd23MDiYpbvA&s"
+                 alt="Logo 2">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container" style="flex:1; padding:40px 24px;">
+    <div style="max-width:720px; margin:0 auto;">
+      <div class="card text-center mb-2" id="result-summary"></div>
+      <div class="card" id="result-wrong-section" style="display:none">
+        <div class="card-title">❌ Pyetjet me Gabime</div>
+        <div class="card-sub">Shiko ku ke bërë gabim dhe cilat ishin përgjigjet e sakta</div>
+        <div id="result-wrong-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="page-admin-login" class="page">
+  <div class="header">
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo">
+          <div class="logo-icon">⚙️</div>
+          <div><div class="logo-text">Panel Administratori</div></div>
+        </div>
+        <div class="header-right">
+          <button class="nav-pill" onclick="showPage('page-landing')">← Kthehu</button>
+          <div class="partner-logos">
+            <img class="partner-logo"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb753MVwGqV8h3ds5zhib8NpkmaQRzmvYCFw&s"
+                 alt="Logo 1">
+            <img class="partner-logo"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHa030diCRpYkecaxZJu6Tvwwd23MDiYpbvA&s"
+                 alt="Logo 2">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container" style="flex:1; display:flex; align-items:center; justify-content:center; padding:40px 24px;">
+    <div style="width:100%; max-width:380px;">
+      <div class="card">
+        <div class="card-title">🔐 Hyrja e Administratorit</div>
+        <div class="card-sub">Kjo pjesë është vetëm për administratorët e DKA-së</div>
+        <div id="admin-login-error"></div>
+        <div class="form-group">
+          <label class="form-label">Përdoruesi</label>
+          <input class="form-input" id="a-username" placeholder="emri">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fjalëkalimi</label>
+          <input class="form-input" id="a-password" type="password" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="adminLogin()">Hyr në Panel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="page-admin" class="page">
+  <div class="header">
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo">
+          <div class="logo-icon">⚙️</div>
+          <div>
+            <div class="logo-text">Panel Administratori</div>
+            <div class="logo-sub">Gara Komunale e Diturisë 2026</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="nav-pills">
+            <button class="nav-pill active" id="tab-tests"   onclick="switchTab('tests')">📋 Testet</button>
+            <button class="nav-pill"        id="tab-results" onclick="switchTab('results')">📊 Rezultatet</button>
+            <button class="nav-pill" onclick="adminLogout()">Dil</button>
+          </div>
+          <div class="partner-logos">
+            <img class="partner-logo"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb753MVwGqV8h3ds5zhib8NpkmaQRzmvYCFw&s"
+                 alt="Logo 1">
+            <img class="partner-logo"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHa030diCRpYkecaxZJu6Tvwwd23MDiYpbvA&s"
+                 alt="Logo 2">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Tests Tab -->
+  <div id="admin-tab-tests" class="container" style="padding:32px 24px;">
+    <div class="flex-between mb-3">
+      <div>
+        <h2 style="font-size:24px;font-weight:700">Menaxhimi i Testeve</h2>
+        <p class="text-muted text-sm mt-1">Krijo, shiko dhe menaxho testet e garës</p>
+      </div>
+      <button class="btn btn-primary" onclick="openCreateTest()">+ Krijo Test të Ri</button>
+    </div>
+    <div id="tests-list"></div>
+  </div>
+  <!-- Results Tab -->
+  <div id="admin-tab-results" class="container hidden" style="padding:32px 24px;">
+    <div class="flex-between mb-3">
+      <div>
+        <h2 style="font-size:24px;font-weight:700">Rezultatet e Garës</h2>
+        <p class="text-muted text-sm mt-1">Klasifikimi sipas pikëve dhe kohëzgjatjes</p>
+      </div>
+      <div class="flex gap-3">
+        <select class="form-select" id="results-test-filter" onchange="loadResults()" style="width:220px">
+          <option value="">Të gjitha testet</option>
+        </select>
+      </div>
+    </div>
+    <div id="results-export-btns" class="hidden mb-2 flex gap-3"></div>
+    <div id="results-container"></div>
+  </div>
+</div>
+
+<!-- MODAL: Create Test -->
+<div class="modal-overlay" id="modal-create-test">
+  <div class="modal" style="max-width:780px; width:95%;">
+    <div class="flex-between mb-3">
+      <div class="modal-title">📝 Krijo Test të Ri</div>
+      <button class="modal-close" onclick="closeModal('modal-create-test')">✕</button>
+    </div>
+    <div id="create-test-error"></div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label">Lënda Mësimore</label>
+        <select class="form-select" id="ct-subject" onchange="updateQuestionCount()">
+          <option value="">Zgjidh lëndën...</option>
+          <optgroup label="Lëndët Shkencore (10 pyetje)">
+            <option value="Matematikë">Matematikë</option>
+            <option value="Fizikë">Fizikë</option>
+            <option value="Kimi">Kimi</option>
+            <option value="Biologji">Biologji</option>
+          </optgroup>
+          <optgroup label="Lëndët Shoqërore (20 pyetje)">
+            <option value="Gjuhë shqipe">Gjuhë shqipe</option>
+            <option value="Gjuhë angleze">Gjuhë angleze</option>
+            <option value="Histori">Histori</option>
+            <option value="Gjeografi">Gjeografi</option>
+            <option value="TIK">TIK</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Klasat</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;" id="ct-grades">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" value="VI"   checked> VI</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" value="VII"  checked> VII</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" value="VIII" checked> VIII</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" value="IX"   checked> IX</label>
+        </div>
+      </div>
+    </div>
+    <div id="ct-info" class="alert alert-warn hidden"></div>
+    <div class="divider"></div>
+    <div class="flex-between mb-2">
+      <div style="font-size:15px;font-weight:700">
+        Pyetjet <span id="q-count-label" class="badge badge-blue">0 pyetje</span>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="addQuestion()">+ Shto Pyetje</button>
+    </div>
+    <div id="questions-builder" style="max-height:420px; overflow-y:auto; padding-right:4px;"></div>
+    <div class="divider"></div>
+    <div class="flex" style="justify-content:flex-end; gap:12px;">
+      <button class="btn btn-secondary" onclick="closeModal('modal-create-test')">Anulo</button>
+      <button class="btn btn-success"   onclick="saveTest()">💾 Ruaj Testin</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Student Detail -->
+<div class="modal-overlay" id="modal-student-detail">
+  <div class="modal" style="max-width:680px; width:95%;">
+    <div class="flex-between mb-3">
+      <div class="modal-title" id="modal-student-name">Detajet e Nxënësit</div>
+      <button class="modal-close" onclick="closeModal('modal-student-detail')">✕</button>
+    </div>
+    <div id="modal-student-content"></div>
+  </div>
+</div>
+
+<!-- MODAL: Confirm Submit -->
+<div class="modal-overlay" id="modal-confirm-submit">
+  <div class="modal" style="max-width:420px; width:90%; text-align:center;">
+    <div style="font-size:48px;margin-bottom:16px">⚠️</div>
+    <div class="modal-title">Konfirmo Dorëzimin</div>
+    <p class="text-muted text-sm mb-3">Pas dorëzimit nuk mund të kthehesh mbrapa. Je i sigurt?</p>
+    <div id="unanswered-warn" class="alert alert-warn mb-2 hidden"></div>
+    <div class="flex" style="gap:12px; justify-content:center;">
+      <button class="btn btn-secondary" onclick="closeModal('modal-confirm-submit')">Vazhdo Testin</button>
+      <button class="btn btn-success"   onclick="submitQuiz()">✓ Dorëzo Tani</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
