@@ -28,6 +28,19 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
+def format_duration(seconds):
+    if not seconds:
+        return "0s"
+
+    seconds = int(seconds)
+    minutes = seconds // 60
+    secs = seconds % 60
+
+    if minutes == 0:
+        return f"{secs}s"
+
+    return f"{minutes}m {secs}s"
+
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 
 DATABASE_URL = os.getenv(
@@ -490,7 +503,7 @@ async def export_excel(test_id: str):
         c.fill, c.font, c.alignment = hfill, hfont, center
 
     for rank, s in enumerate(sessions, 1):
-        dur  = round(s["duration_taken"] / 60, 1) if s["duration_taken"] else 0
+        dur = format_duration(s["duration_taken"]) if s["duration_taken"] else 0
         pct  = round(s["score"] / s["max_score"] * 100, 1) if s["max_score"] else 0
         wq   = json.loads(s["wrong_questions"]) if isinstance(s["wrong_questions"], str) else s["wrong_questions"]
         cq   = json.loads(s["correct_questions"]) if isinstance(s["correct_questions"], str) else s["correct_questions"]
@@ -498,7 +511,7 @@ async def export_excel(test_id: str):
         fc   = "e8f5e9" if pct >= 50 else "ffebee"
         for col, val in enumerate([rank, s["id"][:8], s["student_name"], s["student_surname"],
                                     s["grade"], s["school"], s["score"], s["max_score"],
-                                    pct, dur, len(wq), len(cq), date], 1):
+                                    pct, format_duration(s["duration_taken"]), len(wq), len(cq), date], 1):
             cell = ws.cell(row=rank+1, column=col, value=val)
             cell.fill = PatternFill("solid", fgColor=fc)
             cell.alignment = center
@@ -539,10 +552,10 @@ async def export_pdf(test_id: str):
     ]
     rows = [["#", "ID", "Emri", "Mbiemri", "Klasa", "Shkolla", "Pikët", "%", "Kohë(min)"]]
     for rank, s in enumerate(sessions, 1):
-        dur = round(s["duration_taken"] / 60, 1) if s["duration_taken"] else 0
+        dur = format_duration(s["duration_taken"]) if s["duration_taken"] else 0
         pct = round(s["score"] / s["max_score"] * 100, 1) if s["max_score"] else 0
         rows.append([rank, s["id"][:8], s["student_name"], s["student_surname"],
-                     s["grade"], s["school"], s["score"], f"{pct}%", dur])
+                     s["grade"], s["school"], s["score"], f"{pct}%", format_duration(s["duration_taken"])])
     t = Table(rows, repeatRows=1)
     t.setStyle(TableStyle([
         ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#1a3a5c")),
