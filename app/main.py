@@ -58,7 +58,8 @@ async def lifespan(app: FastAPI):
         min_size=5,
         max_size=40,
         command_timeout=30,
-        statement_cache_size=0,   # avoid prepared-statement issues with PgBouncer
+        statement_cache_size=0, 
+        ssl="require",    # avoid prepared-statement issues with PgBouncer
     )
     await init_db(pool)
 

@@ -29,6 +29,17 @@ async function api(path, method = 'GET', body = null) {
   return r.json();
 }
 
+function escapeHtml(str) {
+  if (str == null) return '';
+
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function showError(elId, msg) {
   const el = document.getElementById(elId);
   if (el) el.innerHTML = `<div class="alert alert-error">⚠ ${msg}</div>`;
@@ -253,18 +264,34 @@ function showResult(data) {
 
   if (data.wrong_questions?.length > 0) {
     wrongSec.style.display = 'block';
+
     wrongList.innerHTML = data.wrong_questions.map(wq => `
       <div class="question-builder" style="margin-bottom:12px">
-        <div style="font-weight:600;margin-bottom:10px">❌ Pyetja ${wq.index + 1}: ${wq.question}</div>
+        <div style="font-weight:600;margin-bottom:10px">
+          ❌ Pyetja ${wq.index + 1}: ${escapeHtml(wq.question)}
+        </div>
+
         ${wq.options.map((opt, oi) => {
           let cls = oi === wq.correct_answer ? 'correct' : oi === wq.your_answer ? 'wrong' : '';
-          return `<div class="option-btn ${cls}" style="cursor:default;margin-bottom:6px">
-            <span class="option-letter">${letters[oi]}</span>${opt}
-            ${oi === wq.correct_answer ? '<span class="badge badge-green" style="margin-left:auto">✓ Saktë</span>' : ''}
-            ${oi === wq.your_answer && oi !== wq.correct_answer ? '<span class="badge badge-red" style="margin-left:auto">✗ Zgjedhja jote</span>' : ''}
-          </div>`;
+
+          return `
+            <div class="option-btn ${cls}" style="cursor:default;margin-bottom:6px">
+              <span class="option-letter">${letters[oi]}</span>
+              ${escapeHtml(opt)}
+
+              ${oi === wq.correct_answer
+                ? '<span class="badge badge-green" style="margin-left:auto">✓ Saktë</span>'
+                : ''}
+
+              ${oi === wq.your_answer && oi !== wq.correct_answer
+                ? '<span class="badge badge-red" style="margin-left:auto">✗ Zgjedhja jote</span>'
+                : ''}
+            </div>
+          `;
         }).join('')}
-      </div>`).join('');
+      </div>
+    `).join('');
+
   } else {
     wrongSec.style.display = 'none';
   }
@@ -515,7 +542,7 @@ async function loadResults() {
           <td><span class="badge ${cls}">${pct}%</span></td>
           <td class="text-muted">${formatDuration(s.duration_taken)}</td>
           <td><span class="badge badge-red">${s.wrong_questions.length} ✗</span></td>
-          <td><button class="btn btn-secondary btn-sm" onclick='showStudentDetail(${JSON.stringify(s)})'>👁</button></td>
+          <td><button class="btn btn-secondary btn-sm" onclick='showStudentDetail(${JSON.stringify(s).replace(/'/g, "&#39;")})'>👁</button></td>
         </tr>`;
       }).join('')}
     </tbody>
@@ -523,17 +550,22 @@ async function loadResults() {
 }
 
 function showStudentDetail(s) {
-  document.getElementById('modal-student-name').textContent = `${s.student_name} ${s.student_surname}`;
-  const pct     = Math.round(s.score / s.max_score * 100);
+  document.getElementById('modal-student-name').textContent =
+    `${s.student_name} ${s.student_surname}`;
+
+  const pct = Math.round(s.score / s.max_score * 100);
   const letters = ['A','B','C','D'];
 
   let html = `
     <div class="grid-2 mb-2">
       <div class="card" style="padding:16px">
         <div class="text-muted text-sm mb-1">Pikët</div>
-        <div style="font-size:28px;font-weight:800;color:${pct>=50?'var(--green)':'var(--red)'}">${s.score}/${s.max_score}</div>
+        <div style="font-size:28px;font-weight:800;color:${pct>=50?'var(--green)':'var(--red)'}">
+          ${s.score}/${s.max_score}
+        </div>
         <div class="badge ${pct>=50?'badge-green':'badge-red'}">${pct}%</div>
       </div>
+
       <div class="card" style="padding:16px">
         <div class="text-muted text-sm mb-1">Informacione</div>
         <div class="text-sm"><strong>ID:</strong> <span class="mono">${s.id.substring(0,8).toUpperCase()}</span></div>
@@ -544,22 +576,45 @@ function showStudentDetail(s) {
     </div>`;
 
   if (s.wrong_questions?.length > 0) {
-    html += `<div style="font-size:14px;font-weight:700;margin-bottom:12px">❌ Pyetjet me Gabime (${s.wrong_questions.length})</div>`;
+    html += `<div style="font-size:14px;font-weight:700;margin-bottom:12px">
+      ❌ Pyetjet me Gabime (${s.wrong_questions.length})
+    </div>`;
+
     s.wrong_questions.forEach(wq => {
-      html += `<div class="question-builder" style="margin-bottom:10px">
-        <div style="font-weight:600;margin-bottom:8px;font-size:13px">Pyetja ${wq.index+1}: ${wq.question}</div>
-        ${wq.options.map((opt, oi) => {
-          const cls = oi===wq.correct_answer ? 'correct' : oi===wq.your_answer ? 'wrong' : '';
-          return `<div class="option-btn ${cls}" style="cursor:default;margin-bottom:4px;padding:8px 12px;font-size:12px">
-            <span class="option-letter" style="width:22px;height:22px;font-size:10px">${letters[oi]}</span>${opt}
-            ${oi===wq.correct_answer ? '<span class="badge badge-green" style="margin-left:auto">✓</span>' : ''}
-            ${oi===wq.your_answer && oi!==wq.correct_answer ? '<span class="badge badge-red" style="margin-left:auto">✗</span>' : ''}
-          </div>`;
-        }).join('')}
-      </div>`;
+      html += `
+        <div class="question-builder" style="margin-bottom:10px">
+          <div style="font-weight:600;margin-bottom:8px;font-size:13px">
+            Pyetja ${wq.index+1}: ${escapeHtml(wq.question)}
+          </div>
+
+          ${wq.options.map((opt, oi) => {
+            const cls =
+              oi === wq.correct_answer ? 'correct' :
+              oi === wq.your_answer ? 'wrong' : '';
+
+            return `
+              <div class="option-btn ${cls}" style="cursor:default;margin-bottom:4px;padding:8px 12px;font-size:12px">
+                <span class="option-letter" style="width:22px;height:22px;font-size:10px">${letters[oi]}</span>
+                ${escapeHtml(opt)}
+
+                ${oi === wq.correct_answer
+                  ? '<span class="badge badge-green" style="margin-left:auto">✓</span>'
+                  : ''}
+
+                ${oi === wq.your_answer && oi !== wq.correct_answer
+                  ? '<span class="badge badge-red" style="margin-left:auto">✗</span>'
+                  : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
     });
+
   } else {
-    html += `<div class="alert alert-success">🎉 Të gjitha pyetjet u përgjigjën saktë!</div>`;
+    html += `<div class="alert alert-success">
+      🎉 Të gjitha pyetjet u përgjigjën saktë!
+    </div>`;
   }
 
   document.getElementById('modal-student-content').innerHTML = html;
