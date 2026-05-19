@@ -3,6 +3,7 @@ let adminSession = JSON.parse(localStorage.getItem('adminSession')) || null;
 let quizState    = null;
 let timerInterval = null;
 let schools = [];
+window.resultsCache = {};
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
 
@@ -535,7 +536,7 @@ async function loadResults() {
         // ✅ SAFE CACHE (prevents crashes)
         if (s?.id) window.resultsCache[s.id] = s;
 
-        const pct = Math.round((s.score / s.max_score) * 100);
+        const pct = Math.round((s.score ?? 0) / (s.max_score || 1) * 100);
         const cls = pct>=70?'badge-green':pct>=50?'badge-gold':'badge-red';
         const rank = s.rank || (i + 1);
 
@@ -556,7 +557,7 @@ async function loadResults() {
           <!-- ✅ SAFE BUTTON -->
           <td>
             <button class="btn btn-secondary btn-sm"
-              onclick="showStudentDetailById('${s.id}')">
+              onclick="showStudentDetailById(\`${s.id}\`)">
               👁
             </button>
           </td>
