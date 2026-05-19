@@ -520,6 +520,9 @@ async function loadResults() {
 
   const medal = r => r===1?'🥇':r===2?'🥈':r===3?'🥉':r;
 
+  // ✅ IMPORTANT: RESET CACHE EVERY LOAD
+  window.resultsCache = {};
+
   document.getElementById('results-container').innerHTML = `<div class="table-wrap"><table>
     <thead><tr>
       <th>#</th><th>ID Sesioni</th><th>Emri</th><th>Klasa</th><th>Shkolla</th>
@@ -528,12 +531,19 @@ async function loadResults() {
     </tr></thead>
     <tbody>
       ${data.map((s, i) => {
-        const pct = Math.round(s.score / s.max_score * 100);
+
+        // ✅ SAFE CACHE (prevents crashes)
+        if (s?.id) window.resultsCache[s.id] = s;
+
+        const pct = Math.round((s.score / s.max_score) * 100);
         const cls = pct>=70?'badge-green':pct>=50?'badge-gold':'badge-red';
         const rank = s.rank || (i + 1);
+
         return `<tr class="rank-${rank}">
           <td style="font-size:18px">${medal(rank)}</td>
-          <td><span class="mono text-muted" style="font-size:11px">${s.id.substring(0,8).toUpperCase()}</span></td>
+          <td><span class="mono text-muted" style="font-size:11px">
+            ${(s.id || '').substring(0,8).toUpperCase()}
+          </span></td>
           <td><strong>${s.student_name} ${s.student_surname}</strong></td>
           <td><span class="badge badge-blue">${s.grade}</span></td>
           <td>${s.school}</td>
@@ -541,8 +551,15 @@ async function loadResults() {
           <td><strong>${s.score}/${s.max_score}</strong></td>
           <td><span class="badge ${cls}">${pct}%</span></td>
           <td class="text-muted">${formatDuration(s.duration_taken)}</td>
-          <td><span class="badge badge-red">${s.wrong_questions.length} ✗</span></td>
-          <td><button class="btn btn-secondary btn-sm" onclick="showStudentDetailById('${s.id}')">👁</button></td>
+          <td><span class="badge badge-red">${(s.wrong_questions || []).length} ✗</span></td>
+
+          <!-- ✅ SAFE BUTTON -->
+          <td>
+            <button class="btn btn-secondary btn-sm"
+              onclick="showStudentDetailById('${s.id}')">
+              👁
+            </button>
+          </td>
         </tr>`;
       }).join('')}
     </tbody>
@@ -550,8 +567,12 @@ async function loadResults() {
 }
 
 function showStudentDetailById(id) {
-  const s = window.resultsCache[id];
-  if (!s) return;
+  const s = window.resultsCache?.[id];
+
+  if (!s) {
+    console.error("Result not found in cache:", id);
+    return;
+  }
 
   showStudentDetail(s);
 }
