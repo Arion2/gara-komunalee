@@ -542,11 +542,18 @@ async function loadResults() {
           <td><span class="badge ${cls}">${pct}%</span></td>
           <td class="text-muted">${formatDuration(s.duration_taken)}</td>
           <td><span class="badge badge-red">${s.wrong_questions.length} ✗</span></td>
-          <td><button class="btn btn-secondary btn-sm" onclick="showStudentDetail(${JSON.stringify(s).replace(/"/g, '&quot;')})">👁</button></td>
+          <td><button class="btn btn-secondary btn-sm" onclick="showStudentDetailById('${s.id}')">👁</button></td>
         </tr>`;
       }).join('')}
     </tbody>
   </table></div>`;
+}
+
+function showStudentDetailById(id) {
+  const s = window.resultsCache[id];
+  if (!s) return;
+
+  showStudentDetail(s);
 }
 
 function showStudentDetail(s) {
